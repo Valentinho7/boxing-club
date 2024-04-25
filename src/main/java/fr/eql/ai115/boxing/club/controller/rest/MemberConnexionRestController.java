@@ -1,0 +1,52 @@
+package fr.eql.ai115.boxing.club.controller.rest;
+
+import fr.eql.ai115.boxing.club.entity.dto.AuthRequest;
+import fr.eql.ai115.boxing.club.entity.dto.AuthResponseDto;
+import fr.eql.ai115.boxing.club.entity.dto.LoginRequest;
+import fr.eql.ai115.boxing.club.jwt.JWTGenerator;
+import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/api/member")
+public class MemberConnexionRestController {
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    ApplicationService applicationService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JWTGenerator jwtGenerator;
+
+
+
+    @PostMapping("register")
+    public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
+        try {
+            String response = applicationService.registerUser(authRequest);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequest loginRequest) {
+        AuthResponseDto response = applicationService.login(loginRequest, authenticationManager);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+}

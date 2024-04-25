@@ -5,7 +5,7 @@ import fr.eql.ai115.boxing.club.entity.SessionType;
 import fr.eql.ai115.boxing.club.entity.dto.AddSessionDto;
 import fr.eql.ai115.boxing.club.entity.dto.DeleteSessionDto;
 import fr.eql.ai115.boxing.club.entity.dto.DisplaySessionDto;
-import fr.eql.ai115.boxing.club.service.AdminSpaceService;
+import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,36 +17,35 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/admin/space")
-public class AdminSpaceRestController {
+@RequestMapping("api/admin/sessions")
+public class AdminSessionRestController {
 
-    /** Injecté par le setter. */
+
     @Autowired
-    AdminSpaceService adminSpaceService;
+    ApplicationService applicationService;
 
-    Logger log = Logger.getLogger(AdminSpaceRestController.class.getName());
+    Logger log = Logger.getLogger(AdminSessionRestController.class.getName());
 
     @PostMapping
     public void saveSession(@RequestBody AddSessionDto addSessionDto) {
-         adminSpaceService.saveSession(addSessionDto);
+         applicationService.saveSession(addSessionDto);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteSession(@RequestBody DeleteSessionDto deleteSessionDto, Long id) {
-        adminSpaceService.deleteSession(deleteSessionDto,id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSession(@RequestBody DeleteSessionDto deleteSessionDto, @PathVariable Long id) {
+        applicationService.deleteSession(deleteSessionDto, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     @Transactional
-    public ResponseEntity<List<DisplaySessionDto>> findAllSession() {
-        List<Session> sessions = adminSpaceService.findAllSessions();
+    public ResponseEntity<List<DisplaySessionDto>> findAllSessions() {
+        List<Session> sessions = applicationService.findAllSessions();
         List<DisplaySessionDto> response =  mapSessionToDisplaySessionDto(sessions);
         if(!response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
     private  List<DisplaySessionDto> mapSessionToDisplaySessionDto(List<Session> sessions) {

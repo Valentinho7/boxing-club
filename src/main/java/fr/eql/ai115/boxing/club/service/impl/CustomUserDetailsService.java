@@ -1,45 +1,55 @@
 package fr.eql.ai115.boxing.club.service.impl;
 
+import fr.eql.ai115.boxing.club.entity.Admin;
 import fr.eql.ai115.boxing.club.entity.Member;
 import fr.eql.ai115.boxing.club.entity.Role;
+import fr.eql.ai115.boxing.club.repository.AdminDao;
 import fr.eql.ai115.boxing.club.repository.MemberDao;
+import fr.eql.ai115.boxing.club.repository.RoleDao;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService{
-
-    private final MemberDao memberDao;
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    public CustomUserDetailsService(MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
+    AdminService adminService;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    MemberDao memberDao;
+
+    @Autowired
+    AdminDao adminDao;
 
 
+    @Transactional
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member member = memberDao.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
-        return new User(member.getUsername(), member.getPassword(), mapRolesToAuthorities(member.getRoles()));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Member> optionalMember = memberDao.findByEmail(username);
+        Optional<Admin> optionalAdmin = adminDao.findByEmail(username);
+        if (optionalMember.isPresent()) {
+            if (!memberDao.hasRole(username, "MEMBER")) {
+                throw new UsernameNotFoundException("Invalid username: " + username);
+            } else {
+                return memberService.loadUserByUsername(username);
+            }
+        } else if (optionalAdmin.isPresent()) {
+            if (!adminDao.hasRole(username, "ADMIN")) {
+                throw new UsernameNotFoundException("Invalid username: " + username);
+            } else {
+                return adminService.loadUserByUsername(username);
+            }
+        } else {
+            throw new UsernameNotFoundException("Invalid username: " + username);
+        }
     }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
-        return roles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
-
-
-
 }

@@ -18,11 +18,22 @@ public class SessionType {
     @OneToMany(mappedBy = "sessionType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final List<Session> sessions = new ArrayList<>();
 
+    /// Getters ///
     public String getName() {
         return name;
     }
 
+    /// Setters ///
     public void setName(String name) {
         this.name = name;
+    }
+
+    /// Constructors ///
+    public SessionType(String name) {
+        this.name = name;
+    }
+
+    /// Constructors vide ///
+    public SessionType() {
     }
 }

@@ -1,7 +1,5 @@
 package fr.eql.ai115.boxing.club.entity.dto;
 
-import java.util.Objects;
-
 public class LoginRequest {
 
     private String email;

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "member")
 public class Member implements UserDetails {
 
     /// Attributs ///
@@ -59,6 +60,8 @@ public class Member implements UserDetails {
     public String getAddress() {
         return address;
     }
+
+    @JsonIgnore
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
