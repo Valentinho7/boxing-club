@@ -1,9 +1,9 @@
 package fr.eql.ai115.boxing.club.entity;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 public class Session {
@@ -13,19 +13,25 @@ public class Session {
     private Long id;
 
     private String name;
-    private int durationInHours;
-    private String description;
 
-    @ManyToOne
+    private int durationInHours;
+
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
     private SessionType sessionType;
 
     private LocalDate date;
     private int hour;
+
+    @Column(name = "coach_name")
     private String coachName;
+
     private int maxPeople;
 
-    @ManyToOne
+    private String description;
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
     private Admin admin;
 
@@ -40,7 +46,49 @@ public class Session {
         this.maxPeople = maxPeople;
     }
 
+    public Session() {
+    }
+
     public Long getId() {
         return id;
     }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public int getDurationInHours() {
+        return durationInHours;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public SessionType getSessionType() {
+        return sessionType;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public String getCoachName() {
+        return coachName;
+    }
+
+    public int getMaxPeople() {
+        return maxPeople;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+
 }

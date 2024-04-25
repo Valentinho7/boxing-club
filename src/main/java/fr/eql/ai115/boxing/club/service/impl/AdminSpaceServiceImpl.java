@@ -1,13 +1,12 @@
 package fr.eql.ai115.boxing.club.service.impl;
 
-import fr.eql.ai115.boxing.club.entity.Member;
 import fr.eql.ai115.boxing.club.entity.Session;
+import fr.eql.ai115.boxing.club.entity.SessionType;
 import fr.eql.ai115.boxing.club.entity.dto.AddSessionDto;
 import fr.eql.ai115.boxing.club.entity.dto.DeleteSessionDto;
-import fr.eql.ai115.boxing.club.repository.MemberDao;
 import fr.eql.ai115.boxing.club.repository.SessionDao;
 import fr.eql.ai115.boxing.club.service.AdminSpaceService;
-import fr.eql.ai115.boxing.club.service.SecurityService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +18,25 @@ import java.util.stream.Collectors;
 public class AdminSpaceServiceImpl implements AdminSpaceService {
 
     /** Injecté par le setter. */
+    @Autowired
     SessionDao sessionDao;
-    /** Injecté par le setter. */
-    SecurityService securityService;
+
 
     @Override
-    public Session saveSession(AddSessionDto addSessionDto) {
-        Session session = new Session(
-                addSessionDto.getName(),
-                addSessionDto.getDurationInHours(),
-                addSessionDto.getDescription(),
-                addSessionDto.getSessionType(),
-                addSessionDto.getDate(),
-                addSessionDto.getHour(),
-                addSessionDto.getCoachName(),
-                addSessionDto.getMaxPeople());
-        sessionDao.save(session);
-        return session;
+    public void saveSession(AddSessionDto addSessionDto) {
+//        SessionType sessionType = sessionDao.findSessionTypeByName(addSessionDto.getNameSessionType());
+//
+//        Session session = new Session(
+//                addSessionDto.getName(),
+//                addSessionDto.getDurationInHours(),
+//                addSessionDto.getDescription(),
+//                addSessionDto.,
+//                addSessionDto.getDate(),
+//                addSessionDto.getHour(),
+//                addSessionDto.getCoachName(),
+//                addSessionDto.getMaxPeople());
+//        sessionDao.save(session);
+//        return session;
     }
 
     @Override

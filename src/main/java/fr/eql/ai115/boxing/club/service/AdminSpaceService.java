@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AdminSpaceService {
 
-    Session saveSession(AddSessionDto addSessionDto);
+    void saveSession(AddSessionDto addSessionDto);
     void deleteSession(DeleteSessionDto deleteSessionDto, Long id);
     List<Session> findAllSessions();
 }

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 public class AuthRequest {
 
 	/// Attributs ///
-	private String username;
 	private String password;
 	private String email;
 	private String address;
@@ -13,14 +12,9 @@ public class AuthRequest {
 	private String firstname;
 	private String lastname;
 	private String phoneNumber;
+	private LocalDate registrationDate;
 
 	/// Getters & Setters
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	public String getPassword() {
 		return password;
 	}
@@ -62,5 +56,11 @@ public class AuthRequest {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	public LocalDate getRegistrationDate() {
+		return registrationDate;
+	}
+	public void setRegistrationDate(LocalDate registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 }

@@ -4,7 +4,7 @@ import fr.eql.ai115.boxing.club.entity.SessionType;
 
 import java.time.LocalDate;
 
-public class AddSessionDto {
+public class DisplaySessionDto {
 
     private String name;
     private int durationInHours;
@@ -36,8 +36,39 @@ public class AddSessionDto {
     public int getMaxPeople() {
         return maxPeople;
     }
-
     public String getNameSessionType() {
         return nameSessionType;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDurationInHours(int durationInHours) {
+        this.durationInHours = durationInHours;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNameSessionType(String nameSessionType) {
+        this.nameSessionType = nameSessionType;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public void setCoachName(String coachName) {
+        this.coachName = coachName;
+    }
+
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
     }
 }

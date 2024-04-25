@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface SessionDao extends JpaRepository<Session, Long> {
 
-
     List<Session> findSessionById(Long id);
 
 }

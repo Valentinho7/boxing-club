@@ -25,12 +25,13 @@ INSERT INTO `session_type` (`id`, `name`) VALUES (1, 'Boxing');
 INSERT INTO `session` (`id`, `coach_name`, `date`, `description`, `duration_in_hours`, `hour`, `max_people`, `name`, `admin_id`, `session_type_id`) VALUES (1, 'Coach 1', '2024-04-25', 'Session 1 description', 1, 10, 10, 'Session 1', 1, 1);
 INSERT INTO `session` (`id`, `coach_name`, `date`, `description`, `duration_in_hours`, `hour`, `max_people`, `name`, `admin_id`, `session_type_id`) VALUES (2, 'Coach 2', '2024-04-26', 'Session 2 description', 1, 10, 15, 'Session 2', 2, 1);
 
-
-
 -- Table: admin_roles
 INSERT INTO `admin_roles` (`admin_id`, `roles_id`) VALUES (1, 1);
 INSERT INTO `admin_roles` (`admin_id`, `roles_id`) VALUES (2, 2);
 
 -- Table: member_roles
 INSERT INTO `member_roles` (`member_id`, `roles_id`) VALUES (1, 2);
+
+-- Table: reservation_session
+INSERT INTO `reservation_sessions` (`reservation_id`, `sessions_id`) VALUES (1, 1);
 

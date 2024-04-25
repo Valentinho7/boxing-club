@@ -1,14 +1,15 @@
 package fr.eql.ai115.boxing.club.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Member implements UserDetails {
@@ -35,8 +36,8 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @ManyToMany(fetch=FetchType.LAZY)
-    private Collection<Role> roles;
+    @ManyToMany(fetch=FetchType.EAGER)
+    private List<Role> roles;
 
     /// Getters ///
 
@@ -64,7 +65,7 @@ public class Member implements UserDetails {
     public List<Reservation> getReservations() {
         return reservations;
     }
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
@@ -94,8 +95,40 @@ public class Member implements UserDetails {
     public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
     }
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
-/// Methods UserDetails ///
+    /// ToString ///
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", birthdate=" + birthdate +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", password='" + password + '\'' +
+                ", registrationDate=" + registrationDate +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id) && Objects.equals(firstname, member.firstname) && Objects.equals(lastname, member.lastname) && Objects.equals(birthdate, member.birthdate) && Objects.equals(email, member.email) && Objects.equals(phoneNumber, member.phoneNumber) && Objects.equals(address, member.address) && Objects.equals(password, member.password) && Objects.equals(registrationDate, member.registrationDate) && Objects.equals(reservations, member.reservations) && Objects.equals(roles, member.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstname, lastname, birthdate, email, phoneNumber, address, password, registrationDate, reservations, roles);
+    }
+
+    /// Methods UserDetails ///
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,4 +158,6 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+
 }
