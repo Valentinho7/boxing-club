@@ -35,6 +35,9 @@ public class Admin {
     public List<Role> getRoles() {
         return roles;
     }
+    public Long getId() {
+        return id;
+    }
 
     /// Setters ///
     public void setRoles(List<Role> roles) {

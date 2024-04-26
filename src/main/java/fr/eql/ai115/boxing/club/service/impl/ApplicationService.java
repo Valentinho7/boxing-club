@@ -54,8 +54,18 @@ public class ApplicationService {
     /// Session part ///
 
     public void saveSession(AddSessionDto addSessionDto) {
-        SessionType sessionType = new SessionType(addSessionDto.getNameSessionType());
-        sessionTypeService.saveSessionType(sessionType); // Sauvegarde de l'instance de SessionType
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Admin admin = adminService.findByEmail(userDetails.getUsername()).get();
+
+        SessionType sessionType;
+        if (sessionTypeService.existsByName(addSessionDto.getNameSessionType())) {
+
+            sessionType = sessionTypeService.findByName(addSessionDto.getNameSessionType()).get(0);
+        } else {
+
+            sessionType = new SessionType(addSessionDto.getNameSessionType());
+            sessionTypeService.saveSessionType(sessionType);
+        }
 
         Session session = new Session(
                 addSessionDto.getName(),
@@ -66,6 +76,9 @@ public class ApplicationService {
                 addSessionDto.getHour(),
                 addSessionDto.getCoachName(),
                 addSessionDto.getMaxPeople());
+
+        session.setAdmin(admin);
+
         sessionService.saveSession(session);
     }
 

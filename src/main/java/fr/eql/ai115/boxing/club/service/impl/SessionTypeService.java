@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Configuration
@@ -26,5 +27,15 @@ public class SessionTypeService {
 
     public List<SessionType> findAllSessionTypes() {
         return sessionTypeDao.findAll();
+    }
+
+    public boolean existsByName(String nameSessionType) {
+        return sessionTypeDao.existsByName(nameSessionType);
+
+    }
+
+    public List<SessionType> findByName(String nameSessionType) {
+        return sessionTypeDao.findByName(nameSessionType);
+
     }
 }

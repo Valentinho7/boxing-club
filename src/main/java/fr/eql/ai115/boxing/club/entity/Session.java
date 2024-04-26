@@ -35,6 +35,8 @@ public class Session {
     @JoinColumn(referencedColumnName = "id")
     private Admin admin;
 
+    /// Constructors ///
+
     public Session(String name, int durationInHours, String description, SessionType sessionType, LocalDate date, int hour, String coachName, int maxPeople) {
         this.name = name;
         this.durationInHours = durationInHours;
@@ -46,49 +48,46 @@ public class Session {
         this.maxPeople = maxPeople;
     }
 
+    /// Constructors vide ///
+
     public Session() {
     }
+
+    /// Getters ///
 
     public Long getId() {
         return id;
     }
-
-
     public String getName() {
         return name;
     }
-
     public int getDurationInHours() {
         return durationInHours;
     }
-
     public String getDescription() {
         return description;
     }
-
     public SessionType getSessionType() {
         return sessionType;
     }
-
     public LocalDate getDate() {
         return date;
     }
-
     public int getHour() {
         return hour;
     }
-
     public String getCoachName() {
         return coachName;
     }
-
     public int getMaxPeople() {
         return maxPeople;
     }
-
     public Admin getAdmin() {
         return admin;
     }
 
-
+    /// Setters ///
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 }
