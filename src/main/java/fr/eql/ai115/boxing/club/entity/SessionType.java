@@ -9,6 +9,8 @@ import java.util.List;
 @Entity
 public class SessionType {
 
+    /// Attributes ///
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,21 +21,28 @@ public class SessionType {
     private final List<Session> sessions = new ArrayList<>();
 
     /// Getters ///
+
     public String getName() {
         return name;
     }
+    public Long getId() {
+        return id;
+    }
 
     /// Setters ///
+
     public void setName(String name) {
         this.name = name;
     }
 
     /// Constructors ///
+
     public SessionType(String name) {
         this.name = name;
     }
 
-    /// Constructors vide ///
+    /// Empty constructor ///
+
     public SessionType() {
     }
 }

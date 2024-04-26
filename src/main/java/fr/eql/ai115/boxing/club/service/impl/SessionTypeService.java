@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Configuration
@@ -15,7 +16,6 @@ public class SessionTypeService {
 
     @Autowired
     SessionTypeDao sessionTypeDao;
-
 
     public void saveSessionType(SessionType sessionType) {
         sessionTypeDao.save(sessionType);
@@ -37,5 +37,9 @@ public class SessionTypeService {
     public List<SessionType> findByName(String nameSessionType) {
         return sessionTypeDao.findByName(nameSessionType);
 
+    }
+
+    public Optional<SessionType> findSessionTypeById(Long id) {
+        return sessionTypeDao.findSessionTypeById(id);
     }
 }

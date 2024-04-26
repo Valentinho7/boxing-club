@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Entity
 public class Session {
 
+    /// Attributes ///
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,7 +17,6 @@ public class Session {
     private String name;
 
     private int durationInHours;
-
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
@@ -87,7 +88,35 @@ public class Session {
     }
 
     /// Setters ///
+
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setDurationInHours(int durationInHours) {
+        this.durationInHours = durationInHours;
+    }
+    public void setSessionType(SessionType sessionType) {
+        this.sessionType = sessionType;
+    }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+    public void setCoachName(String coachName) {
+        this.coachName = coachName;
+    }
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

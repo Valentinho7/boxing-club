@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface SessionTypeDao extends JpaRepository<SessionType, Long> {
 
-    Optional<Session> findSessionTypeById(Long id);
+    Optional<SessionType> findSessionTypeById(Long id);
 
     boolean existsByName(String nameSessionType);
 

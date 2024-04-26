@@ -3,8 +3,6 @@ package fr.eql.ai115.boxing.club.controller.rest;
 import fr.eql.ai115.boxing.club.entity.Session;
 import fr.eql.ai115.boxing.club.entity.SessionType;
 import fr.eql.ai115.boxing.club.entity.dto.AddSessionDto;
-import fr.eql.ai115.boxing.club.entity.dto.AddSessionTypeDto;
-import fr.eql.ai115.boxing.club.entity.dto.DeleteSessionDto;
 import fr.eql.ai115.boxing.club.entity.dto.DisplaySessionDto;
 import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
 import jakarta.transaction.Transactional;
@@ -15,17 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/admin/sessions")
-public class AdminSessionRestController {
-
+public class SessionRestController {
 
     @Autowired
     ApplicationService applicationService;
-
-    Logger log = Logger.getLogger(AdminSessionRestController.class.getName());
 
     @PostMapping
     public void saveSession(@RequestBody AddSessionDto addSessionDto) {
@@ -33,12 +27,18 @@ public class AdminSessionRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSession(@RequestBody DeleteSessionDto deleteSessionDto, @PathVariable Long id) {
-        applicationService.deleteSession(deleteSessionDto, id);
+    public ResponseEntity<Void> deleteSession(@PathVariable Long id) {
+        applicationService.deleteSession(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateSession(@RequestBody AddSessionDto updateSessionDto, @PathVariable Long id) {
+        applicationService.updateSession(updateSessionDto, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
     @Transactional
     public ResponseEntity<List<DisplaySessionDto>> findAllSessions() {
         List<Session> sessions = applicationService.findAllSessions();

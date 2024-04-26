@@ -1,6 +1,7 @@
 package fr.eql.ai115.boxing.club.service.impl;
 
 import fr.eql.ai115.boxing.club.entity.Session;
+import fr.eql.ai115.boxing.club.entity.SessionType;
 import fr.eql.ai115.boxing.club.entity.dto.DeleteSessionDto;
 import fr.eql.ai115.boxing.club.repository.SessionDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,9 @@ public class SessionService {
 
     public List<Session> findAllSessions() {
         return sessionDao.findAll();
+    }
+
+    public List<Session> findSessionsBySessionType(SessionType sessionType) {
+        return sessionDao.findSessionsBySessionType(sessionType);
     }
 }
