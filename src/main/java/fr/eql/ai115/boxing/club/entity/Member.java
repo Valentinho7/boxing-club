@@ -42,6 +42,9 @@ public class Member implements UserDetails {
 
     /// Getters ///
 
+    public Long getId() {
+        return id;
+    }
     public String getFirstname() {
         return firstname;
     }

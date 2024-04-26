@@ -215,24 +215,24 @@ public class ApplicationService {
     /**
      * Registers a new user.
      *
-     * @param authRequest The authentication request containing the user details.
+     * @param addMemberDto The authentication request containing the user details.
      * @return A string message indicating the result of the registration.
      */
     @Transactional
-    public String registerUser(AuthRequest authRequest) {
-        if (memberService.existsByEmail(authRequest.getEmail())) {
+    public String registerUser(AddMemberDto addMemberDto) {
+        if (memberService.existsByEmail(addMemberDto.getEmail())) {
             throw new IllegalArgumentException("Error: Email is already taken!");
         }
 
         Member member = new Member();
-        member.setFirstname(authRequest.getFirstname());
-        member.setLastname(authRequest.getLastname());
-        member.setBirthdate(authRequest.getBirthdate());
-        member.setEmail(authRequest.getEmail());
-        member.setPhoneNumber(authRequest.getPhoneNumber());
-        member.setAddress(authRequest.getAddress());
+        member.setFirstname(addMemberDto.getFirstname());
+        member.setLastname(addMemberDto.getLastname());
+        member.setBirthdate(addMemberDto.getBirthdate());
+        member.setEmail(addMemberDto.getEmail());
+        member.setPhoneNumber(addMemberDto.getPhoneNumber());
+        member.setAddress(addMemberDto.getAddress());
         member.setRegistrationDate(LocalDate.now());
-        member.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        member.setPassword(passwordEncoder.encode(addMemberDto.getPassword()));
 
         Role roles = roleService.findByName("MEMBER");
         member.setRoles(Collections.singletonList(roles));
@@ -243,23 +243,59 @@ public class ApplicationService {
 
     }
 
+    /**
+     * Updates the details of an existing member.
+     *
+     * @param updateMemberDto The data transfer object containing the updated member details.
+     * @param id The ID of the member to update.
+     * @throws IllegalArgumentException if no member is found with the provided ID.
+     */
+    public void updateMember(AddMemberDto updateMemberDto, Long id) {
+        Member memberToUpdate = memberService.findMemberById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        if (updateMemberDto.getFirstname() != null) {
+            memberToUpdate.setFirstname(updateMemberDto.getFirstname());
+        }
+        if (updateMemberDto.getLastname() != null) {
+            memberToUpdate.setLastname(updateMemberDto.getLastname());
+        }
+        if (updateMemberDto.getBirthdate() != null) {
+            memberToUpdate.setBirthdate(updateMemberDto.getBirthdate());
+        }
+        if (updateMemberDto.getEmail() != null) {
+            memberToUpdate.setEmail(updateMemberDto.getEmail());
+        }
+        if (updateMemberDto.getPhoneNumber() != null) {
+            memberToUpdate.setPhoneNumber(updateMemberDto.getPhoneNumber());
+        }
+        if (updateMemberDto.getAddress() != null) {
+            memberToUpdate.setAddress(updateMemberDto.getAddress());
+        }
+        if (updateMemberDto.getPassword() != null) {
+            memberToUpdate.setPassword(passwordEncoder.encode(updateMemberDto.getPassword()));
+        }
+
+        memberService.save(memberToUpdate);
+    }
+
     /// Admin methods ///
 
     /**
      * Registers a new admin.
      *
-     * @param authRequest The authentication request containing the admin details.
+     * @param addMemberDto The authentication request containing the admin details.
      * @return A string message indicating the result of the registration.
      */
     @Transactional
-    public String registerAdmin(AuthRequest authRequest) {
-        if (adminService.existsByEmail(authRequest.getEmail())) {
+    public String registerAdmin(AddMemberDto addMemberDto) {
+        if (adminService.existsByEmail(addMemberDto.getEmail())) {
             throw new IllegalArgumentException("Error: Email is already taken!");
         }
 
         Admin admin = new Admin();
-        admin.setEmail(authRequest.getEmail());
-        admin.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        admin.setEmail(addMemberDto.getEmail());
+        admin.setPassword(passwordEncoder.encode(addMemberDto.getPassword()));
 
         Role roles = roleService.findByName("ADMIN");
         admin.setRoles(Collections.singletonList(roles));

@@ -2,7 +2,7 @@ package fr.eql.ai115.boxing.club.entity.dto;
 
 import java.time.LocalDate;
 
-public class AuthRequest {
+public class AddMemberDto {
 
 	/// Attributs ///
 	private String password;

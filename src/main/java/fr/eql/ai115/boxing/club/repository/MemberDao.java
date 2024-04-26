@@ -11,6 +11,8 @@ public interface MemberDao extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
+    Optional<Member> findMemberById(Long id);
+
     Boolean existsByEmail(String email);
 
     @Query("SELECT COUNT(r) > 0 FROM Member m JOIN m.roles r WHERE m.email = :email AND r.name = :roleName")

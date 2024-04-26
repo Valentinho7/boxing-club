@@ -31,6 +31,10 @@ public class MemberService implements UserDetailsService{
         memberDao.save(member);
     }
 
+    public Optional<Member> findMemberById(Long id) {
+        return memberDao.findMemberById(id);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberDao.findByEmail(email)
@@ -42,5 +46,10 @@ public class MemberService implements UserDetailsService{
         return roles
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+
+    public Optional<Member> findByEmail(String username) {
+        return memberDao.findByEmail(username);
     }
 }

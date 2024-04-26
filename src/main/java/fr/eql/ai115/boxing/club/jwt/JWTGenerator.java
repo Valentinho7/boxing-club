@@ -2,7 +2,9 @@ package fr.eql.ai115.boxing.club.jwt;
 
 
 import fr.eql.ai115.boxing.club.entity.Admin;
+import fr.eql.ai115.boxing.club.entity.Member;
 import fr.eql.ai115.boxing.club.service.impl.AdminService;
+import fr.eql.ai115.boxing.club.service.impl.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JWTGenerator {
@@ -22,22 +25,30 @@ public class JWTGenerator {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    MemberService memberService;
+
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
 
-        // Récupérer l'ID de l'administrateur
-        Admin admin = adminService.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Admin not found"));
-        Long adminId = admin.getId();
+        Long userId;
+        Optional<Admin> adminOptional = adminService.findByEmail(username);
+        if (adminOptional.isPresent()) {
+            userId = adminOptional.get().getId();
+        } else {
+            Member member = memberService.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            userId = member.getId();
+        }
 
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .claim("adminId", adminId) // Ajouter l'ID de l'administrateur dans le token
+                .claim("userId", userId)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .claim("roles", authentication.getAuthorities())

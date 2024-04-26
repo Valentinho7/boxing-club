@@ -1,6 +1,6 @@
 package fr.eql.ai115.boxing.club.controller.rest;
 
-import fr.eql.ai115.boxing.club.entity.dto.AuthRequest;
+import fr.eql.ai115.boxing.club.entity.dto.AddMemberDto;
 import fr.eql.ai115.boxing.club.entity.dto.AuthResponseDto;
 import fr.eql.ai115.boxing.club.entity.dto.LoginRequest;
 import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin")
-public class AdminConnexionRestController {
+public class AdminRestController {
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -24,9 +24,9 @@ public class AdminConnexionRestController {
     ApplicationService applicationService;
 
     @PostMapping("register")
-    public ResponseEntity<String> registerAdmin(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> registerAdmin(@RequestBody AddMemberDto addMemberDto) {
         try {
-            String response = applicationService.registerAdmin(authRequest);
+            String response = applicationService.registerAdmin(addMemberDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
