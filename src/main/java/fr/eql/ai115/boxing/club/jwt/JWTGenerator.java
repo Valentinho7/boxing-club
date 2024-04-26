@@ -26,6 +26,7 @@ public class JWTGenerator {
                 .setSubject(username)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
+                .claim("roles", authentication.getAuthorities())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
         System.out.println("New key : ");

@@ -5,6 +5,7 @@ import fr.eql.ai115.boxing.club.entity.dto.*;
 import fr.eql.ai115.boxing.club.jwt.JWTGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,9 +51,11 @@ public class ApplicationService {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+    /// Session part ///
+
     public void saveSession(AddSessionDto addSessionDto) {
         SessionType sessionType = new SessionType(addSessionDto.getNameSessionType());
-        saveSessionType(sessionType);
+        sessionTypeService.saveSessionType(sessionType); // Sauvegarde de l'instance de SessionType
 
         Session session = new Session(
                 addSessionDto.getName(),
@@ -76,7 +79,10 @@ public class ApplicationService {
         return sessionService.findAllSessions();
     }
 
-    public void saveSessionType(SessionType sessionType) {
+    /// SessionType part ///
+
+    public void saveSessionType(AddSessionTypeDto addSessionTypeDto) {
+        SessionType sessionType = new SessionType(addSessionTypeDto.getName());
         sessionTypeService.saveSessionType(sessionType);
     }
 
@@ -87,6 +93,8 @@ public class ApplicationService {
     public List<SessionType> findAllSessionTypes() {
         return sessionTypeService.findAllSessionTypes();
     }
+
+    /// User part ///
 
     @Transactional
     public String registerUser(AuthRequest authRequest) {
@@ -122,6 +130,9 @@ public class ApplicationService {
         String token = jwtGenerator.generateToken(authentication);
         return new AuthResponseDto(token);
     }
+
+
+    /// Admin part ///
 
     @Transactional
     public String registerAdmin(AuthRequest authRequest) {

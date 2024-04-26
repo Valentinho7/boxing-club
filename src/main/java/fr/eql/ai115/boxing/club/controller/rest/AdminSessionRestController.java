@@ -3,6 +3,7 @@ package fr.eql.ai115.boxing.club.controller.rest;
 import fr.eql.ai115.boxing.club.entity.Session;
 import fr.eql.ai115.boxing.club.entity.SessionType;
 import fr.eql.ai115.boxing.club.entity.dto.AddSessionDto;
+import fr.eql.ai115.boxing.club.entity.dto.AddSessionTypeDto;
 import fr.eql.ai115.boxing.club.entity.dto.DeleteSessionDto;
 import fr.eql.ai115.boxing.club.entity.dto.DisplaySessionDto;
 import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
@@ -37,7 +38,7 @@ public class AdminSessionRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @Transactional
     public ResponseEntity<List<DisplaySessionDto>> findAllSessions() {
         List<Session> sessions = applicationService.findAllSessions();

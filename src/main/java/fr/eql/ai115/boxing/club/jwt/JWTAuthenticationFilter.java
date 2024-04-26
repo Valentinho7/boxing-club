@@ -1,5 +1,6 @@
 package fr.eql.ai115.boxing.club.jwt;
 
+import fr.eql.ai115.boxing.club.service.impl.CustomUserDetailsService;
 import fr.eql.ai115.boxing.club.service.impl.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +21,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JWTGenerator tokenGenerator;
 
     @Autowired
-    private MemberService userDetailsService;
+    private CustomUserDetailsService userDetailsService;
 
 
     @Override

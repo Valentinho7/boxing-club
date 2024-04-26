@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -48,6 +49,8 @@ public class SpringSecurityConfig {
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/member/register", "/api/admin/register","/api/member/login", "/api/admin/login").permitAll();
+                    authorize.requestMatchers("api/admin/**").hasAuthority("Admin");
+                    authorize.requestMatchers("/api/member/**").hasAuthority("Member");
                     authorize.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());
