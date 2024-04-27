@@ -4,15 +4,12 @@ INSERT INTO `admin` (`id`, `email`, `password`) VALUES (2, 'admin2@example.com',
 
 
 -- Table: member
-INSERT INTO `member` (`id`, `address`, `birthdate`, `email`, `firstname`, `lastname`, `password`, `phone_number`, `registration_date`) VALUES (1, '123 Street Name', '1990-01-01', 'member@example.com', 'John', 'Doe', 'password', '123-456-7890', '2024-01-01');
+INSERT INTO `member` (`id`, `address`, `birthdate`, `email`, `firstname`, `lastname`, `password`, `phone_number`, `registration_date`,`is_subscription_validated`,`is_payement_validated`) VALUES (1, '123 Street Name', '1990-01-01', 'member@example.com', 'John', 'Doe', 'password', '123-456-7890', '2024-01-01',false,false);
 
--- Table: status
-INSERT INTO `status` (`id`, `name`) VALUES (1, 'Pending');
-INSERT INTO `status` (`id`, `name`) VALUES (2, 'Approved');
 
 -- Table: reservation
-INSERT INTO `reservation` (`id`, `ordered_date`, `validate_date`, `member_id`, `status_id`) VALUES (1, '2024-04-22', '2024-04-22', 1, 1);
-INSERT INTO `reservation` (`id`, `ordered_date`, `validate_date`, `member_id`, `status_id`) VALUES (2, '2024-04-23', '2024-04-22', 1, 1);
+INSERT INTO `reservation` (`id`, `ordered_date`, `validate_date`,`is_validate`, `member_id`) VALUES (1, '2024-04-22', '2024-04-22',false, 1, 1);
+INSERT INTO `reservation` (`id`, `ordered_date`, `validate_date`,`is_validate`, `member_id`) VALUES (2, '2024-04-23', '2024-04-22',false, 1, 1);
 
 -- Table: role
 INSERT INTO `role` (`id`, `name`) VALUES (1, 'Admin');

@@ -28,6 +28,12 @@ public class Member implements UserDetails {
     private String phoneNumber;
     private String address;
 
+    @Column(name = "is_payement_validated", nullable = false, columnDefinition = "boolean default false")
+    private boolean isPayementValidated;
+
+    @Column(name = "is_subscription_validated", nullable = false, columnDefinition = "boolean default false")
+    private boolean isSubscriptionValidated;
+
     @JsonIgnore
     private String password;
 
@@ -63,8 +69,12 @@ public class Member implements UserDetails {
     public String getAddress() {
         return address;
     }
-
-    @JsonIgnore
+    public boolean isPayementValidated() {
+        return isPayementValidated;
+    }
+    public boolean isSubscriptionValidated() {
+        return isSubscriptionValidated;
+    }
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
@@ -103,6 +113,15 @@ public class Member implements UserDetails {
     }
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setPayementValidated(boolean payementValidated) {
+        isPayementValidated = payementValidated;
+    }
+    public void setSubscriptionValidated(boolean subscriptionValidated) {
+        isSubscriptionValidated = subscriptionValidated;
     }
 
     /// ToString ///

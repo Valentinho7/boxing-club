@@ -12,13 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Configuration
 public class SessionService {
-
 
     @Autowired
     SessionDao sessionDao;
-
 
     public void saveSession(Session session) {
         sessionDao.save(session);
@@ -39,4 +36,12 @@ public class SessionService {
     public List<Session> findSessionsBySessionType(SessionType sessionType) {
         return sessionDao.findSessionsBySessionType(sessionType);
     }
+
+    public Session getSessionById(Long sessionId) {
+        return sessionDao.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+    }
+
 }
+
+

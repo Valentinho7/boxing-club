@@ -14,6 +14,7 @@ public interface AdminDao extends JpaRepository<Admin, Long> {
 
     Boolean existsByEmail(String email);
 
+    Optional<Admin> findAdminById(Long id);
 
     @Query("SELECT COUNT(r) > 0 FROM Admin a JOIN a.roles r WHERE a.email = :email AND r.name = :roleName")
     boolean hasRole(@Param("email") String email, @Param("roleName") String roleName);

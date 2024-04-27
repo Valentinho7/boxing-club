@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Main service class for the application.
@@ -30,6 +32,9 @@ public class ApplicationService {
 
     @Autowired
     SessionTypeService sessionTypeService;
+
+    @Autowired
+    ReservationService reservationService;
 
     @Autowired
     MemberService memberService;
@@ -49,10 +54,17 @@ public class ApplicationService {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+    ////////////////////////
     /// Session methods ///
+    ///////////////////////
 
     /**
      * Saves a new session.
+     *
+     * This method takes an AddSessionDto object as a parameter, which contains the details of the session to be saved.
+     * It retrieves the current authenticated admin from the SecurityContext, and finds the corresponding admin in the database.
+     * It then creates a new Session object with the details from the AddSessionDto, and sets the admin of the session to the authenticated admin.
+     * Finally, it saves the new session in the database.
      *
      * @param addSessionDto The session data transfer object containing the session details.
      */
@@ -88,7 +100,11 @@ public class ApplicationService {
     /**
      * Deletes a session.
      *
+     * This method takes the ID of a session as a parameter, finds the corresponding session in the database, and deletes it.
+     * If no session is found with the provided ID, it throws an IllegalArgumentException.
+     *
      * @param id The ID of the session to delete.
+     * @throws IllegalArgumentException If no session is found with the provided ID.
      */
     public void deleteSession(Long id) {
         Session sessionToDelete = sessionService.findSessionById(id)
@@ -100,6 +116,8 @@ public class ApplicationService {
     /**
      * Retrieves all sessions.
      *
+     * This method retrieves all sessions from the database and returns them as a list.
+     *
      * @return A list of all sessions.
      */
     public List<Session> findAllSessions() {
@@ -109,8 +127,15 @@ public class ApplicationService {
     /**
      * Updates a session.
      *
+     * This method takes an AddSessionDto object and a session ID as parameters.
+     * The AddSessionDto object contains the updated details of the session.
+     * The method first finds the session by its ID.
+     * If the session is not found, it throws an IllegalArgumentException.
+     * If the session is found, it updates the session's details with the details from the AddSessionDto, and saves the updated session in the database.
+     *
      * @param updateSessionDto The session data transfer object containing the updated session details.
      * @param id The ID of the session to update.
+     * @throws IllegalArgumentException If no session is found with the provided ID.
      */
     public void updateSession(AddSessionDto updateSessionDto, Long id) {
         Session sessionToUpdate = sessionService.findSessionById(id)
@@ -151,10 +176,15 @@ public class ApplicationService {
         sessionService.saveSession(sessionToUpdate);
     }
 
+    ///////////////////////////
     /// SessionType methods ///
+    ///////////////////////////
 
     /**
      * Saves a new session type.
+     *
+     * This method takes an AddSessionTypeDto object as a parameter, which contains the details of the session type to be saved.
+     * It creates a new SessionType object with the details from the AddSessionTypeDto, and saves the new session type in the database.
      *
      * @param addSessionTypeDto The session type data transfer object containing the session type details.
      */
@@ -163,10 +193,17 @@ public class ApplicationService {
         sessionTypeService.saveSessionType(sessionType);
     }
 
+
     /**
      * Deletes a session type.
      *
+     * This method takes the ID of a session type as a parameter, finds the corresponding session type in the database, and deletes it.
+     * If no session type is found with the provided ID, it throws an IllegalArgumentException.
+     * If the session type is being used by any session, it throws an IllegalStateException.
+     *
      * @param id The ID of the session type to delete.
+     * @throws IllegalArgumentException If no session type is found with the provided ID.
+     * @throws IllegalStateException If the session type is being used by any session.
      */
     public void deleteSessionType(Long id) {
         SessionType sessionTypeToDelete = sessionTypeService.findSessionTypeById(id)
@@ -184,8 +221,15 @@ public class ApplicationService {
     /**
      * Updates a session type.
      *
+     * This method takes an AddSessionTypeDto object and a session type ID as parameters.
+     * The AddSessionTypeDto object contains the updated details of the session type.
+     * The method first finds the session type by its ID.
+     * If the session type is not found, it throws an IllegalArgumentException.
+     * If the session type is found, it updates the session type's details with the details from the AddSessionTypeDto, and saves the updated session type in the database.
+     *
      * @param updateSessionTypeDto The session type data transfer object containing the updated session type details.
      * @param id The ID of the session type to update.
+     * @throws IllegalArgumentException If no session type is found with the provided ID.
      */
     public void updateSessionType(AddSessionTypeDto updateSessionTypeDto, Long id) {
         SessionType sessionTypeToUpdate = sessionTypeService.findSessionTypeById(id)
@@ -204,19 +248,48 @@ public class ApplicationService {
     /**
      * Retrieves all session types.
      *
+     * This method retrieves all session types from the database and returns them as a list.
+     *
      * @return A list of all session types.
      */
     public List<SessionType> findAllSessionTypes() {
         return sessionTypeService.findAllSessionTypes();
     }
 
+    ////////////////////////////
+    /// Reservation methods ///
+    //////////////////////////
+
+    public void registerOrder(Long memberId, List<Long> sessionIds) {
+        Member member = memberService.getMemberById(memberId);
+
+        List<Session> sessions = sessionIds.stream()
+                .map(sessionService::getSessionById)
+                .collect(Collectors.toList());
+
+        Reservation reservation = new Reservation();
+        reservation.setOrderedDate(LocalDate.now());
+        reservation.setMember(member);
+        reservation.setSessions(sessions);
+
+        reservationService.saveReservation(reservation);
+    }
+
+    /////////////////////
     /// User methods ///
+    ///////////////////
 
     /**
      * Registers a new user.
      *
+     * This method takes an AddMemberDto object as a parameter, which contains the details of the user to be registered.
+     * It checks if a user already exists with the provided email. If so, it throws an IllegalArgumentException.
+     * Otherwise, it creates a new Member object with the details from the AddMemberDto, sets the role of the member to "MEMBER", and saves the new member in the database.
+     * Finally, it returns a success message.
+     *
      * @param addMemberDto The authentication request containing the user details.
      * @return A string message indicating the result of the registration.
+     * @throws IllegalArgumentException If a user already exists with the provided email.
      */
     @Transactional
     public String registerUser(AddMemberDto addMemberDto) {
@@ -243,12 +316,19 @@ public class ApplicationService {
 
     }
 
+
     /**
      * Updates the details of an existing member.
      *
+     * This method takes an AddMemberDto object and a member ID as parameters.
+     * The AddMemberDto object contains the updated details of the member.
+     * The method first finds the member by their ID.
+     * If the member is not found, it throws an IllegalArgumentException.
+     * If the member is found, it updates the member's details with the details from the AddMemberDto, and saves the updated member in the database.
+     *
      * @param updateMemberDto The data transfer object containing the updated member details.
      * @param id The ID of the member to update.
-     * @throws IllegalArgumentException if no member is found with the provided ID.
+     * @throws IllegalArgumentException If no member is found with the provided ID.
      */
     public void updateMember(AddMemberDto updateMemberDto, Long id) {
         Member memberToUpdate = memberService.findMemberById(id)
@@ -279,13 +359,82 @@ public class ApplicationService {
         memberService.save(memberToUpdate);
     }
 
+    /**
+     * Changes the password of a member.
+     *
+     * This method takes the member's ID and a PasswordChangeRequestDto object as parameters.
+     * The PasswordChangeRequestDto object contains the old password, the new password, and the confirmation of the new password.
+     * The method first checks if the new password and the confirmation match.
+     * If they do not match, it throws an IllegalArgumentException.
+     * Then, it checks if the old password is correct.
+     * If the old password is incorrect, it throws an IllegalArgumentException.
+     * If both checks pass, it updates the member's password in the database.
+     *
+     * @param memberId The ID of the member whose password is to be changed.
+     * @param passwordChangeRequest The PasswordChangeRequestDto object containing the old password, the new password, and the confirmation of the new password.
+     * @throws IllegalArgumentException If the new password and the confirmation do not match, or if the old password is incorrect.
+     */
+    public void changeMemberPassword(Long memberId, PasswordChangeRequestDto passwordChangeRequest) {
+        String oldPassword = passwordChangeRequest.getOldPassword();
+        String newPassword = passwordChangeRequest.getNewPassword();
+        String confirmPassword = passwordChangeRequest.getConfirmPassword();
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("New password and confirmation do not match");
+        }
+
+        if (!passwordEncoder.matches(oldPassword, memberService.getMemberPassword(memberId))) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        memberService.updateMemberPassword(memberId, passwordEncoder.encode(newPassword));
+    }
+
+    /**
+     * Validates the payment of a member.
+     *
+     * @param memberId The ID of the member whose payment is to be validated.
+     */
+    public void validateMemberPayment(Long memberId) {
+        memberService.validatePayment(memberId);
+    }
+
+    /**
+     * Validates the subscription of a member.
+     *
+     * This method retrieves the member by their ID, checks if their payment has been validated,
+     * and if so, validates their subscription. If the member's payment has not been validated,
+     * an IllegalArgumentException is thrown.</p>
+     *
+     * @param memberId The ID of the member whose subscription is to be validated.
+     * @throws IllegalArgumentException if no member is found with the provided ID, or if the member's payment has not been validated.
+     */
+    public void validateMemberSubscription(Long memberId) {
+        Member member = memberService.findMemberById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        if (!member.isPayementValidated()) {
+            throw new IllegalArgumentException("Payment must be validated before validating subscription");
+        }
+
+        memberService.validateSubscription(memberId);
+    }
+
+    //////////////////////
     /// Admin methods ///
+    ////////////////////
 
     /**
      * Registers a new admin.
      *
+     * This method takes an AddMemberDto object as a parameter, which contains the details of the admin to be registered.
+     * It checks if an admin already exists with the provided email. If so, it throws an IllegalArgumentException.
+     * Otherwise, it creates a new Admin object with the details from the AddMemberDto, sets the role of the admin to "ADMIN", and saves the new admin in the database.
+     * Finally, it returns a success message.
+     *
      * @param addMemberDto The authentication request containing the admin details.
      * @return A string message indicating the result of the registration.
+     * @throws IllegalArgumentException If an admin already exists with the provided email.
      */
     @Transactional
     public String registerAdmin(AddMemberDto addMemberDto) {
@@ -305,10 +454,75 @@ public class ApplicationService {
         return "Admin registered successfully!";
     }
 
+    /**
+     * Updates the email of an existing admin.
+     *
+     * This method takes an UpdateAdminDto object and an admin ID as parameters.
+     * The UpdateAdminDto object contains the new email of the admin.
+     * The method first finds the admin by their id.
+     * If the admin is not found, it throws an IllegalArgumentException.
+     * If the admin is found, it updates the admin email in the database.
+     *
+     * @param updateAdminDto The UpdateAdminDto object containing the new email of the admin.
+     * @param id The ID of the admin to update.
+     * @throws IllegalArgumentException If no admin is found with the provided email.
+     */
+    public void updateAdmin(UpdateAdminDto updateAdminDto, Long id) {
+        Admin adminToUpdate = adminService.findAdminById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+
+        if (updateAdminDto.getEmail() != null) {
+            adminToUpdate.setEmail(updateAdminDto.getEmail());
+        }
+
+        adminService.save(adminToUpdate);
+    }
+
+    /**
+     * Changes the password of an admin.
+     *
+     * This method takes the admins ID and a PasswordChangeRequestDto object as parameters.
+     * The PasswordChangeRequestDto object contains the old password, the new password, and the confirmation of the new password.
+     * The method first checks if the new password and the confirmation match.
+     * If they do not match, it throws an IllegalArgumentException.
+     * Then, it checks if the old password is correct.
+     * If the old password is incorrect, it throws an IllegalArgumentException.
+     * If both checks pass, it updates the admin password in the database.
+     *
+     * @param adminId The ID of the admin whose password is to be changed.
+     * @param passwordChangeRequest The PasswordChangeRequestDto object containing the old password, the new password, and the confirmation of the new password.
+     * @throws IllegalArgumentException If the new password and the confirmation do not match, or if the old password is incorrect.
+     */
+    public void changeAdminPassword(Long adminId, PasswordChangeRequestDto passwordChangeRequest) {
+        String oldPassword = passwordChangeRequest.getOldPassword();
+        String newPassword = passwordChangeRequest.getNewPassword();
+        String confirmPassword = passwordChangeRequest.getConfirmPassword();
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("New password and confirmation do not match");
+        }
+
+        if (!passwordEncoder.matches(oldPassword, adminService.getAdminPassword(adminId))) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        adminService.updateAdminPassword(adminId, passwordEncoder.encode(newPassword));
+    }
+
+    ///////////////////////////////
     /// Authentication methods ///
+    /////////////////////////////
 
     /**
      * Authenticates a user.
+     *
+     * This method takes a LoginRequest object and an AuthenticationManager as parameters.
+     * The LoginRequest object contains the user's credentials (email and password).
+     * The method first retrieves the UserDetails of the user by their email.
+     * It then authenticates the user using the AuthenticationManager.
+     * If the authentication is successful, it sets the authentication in the SecurityContext.
+     * It then generates a JWT token for the authenticated user using the JWTGenerator.
+     * Finally, it returns an AuthResponseDto object containing the generated token.
      *
      * @param loginRequest The login request containing the user's credentials.
      * @param authenticationManager The authentication manager.

@@ -1,6 +1,7 @@
 package fr.eql.ai115.boxing.club.service.impl;
 
 import fr.eql.ai115.boxing.club.entity.Admin;
+import fr.eql.ai115.boxing.club.entity.Member;
 import fr.eql.ai115.boxing.club.entity.Role;
 import fr.eql.ai115.boxing.club.repository.AdminDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class AdminService implements UserDetailsService {
 
     }
 
+    public Optional<Admin> findAdminById(Long id) {
+        return adminDao.findAdminById(id);
+    }
+
     public boolean existsByEmail(String email) {
         return adminDao.existsByEmail(email);
     }
@@ -56,5 +61,18 @@ public class AdminService implements UserDetailsService {
         return roles
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    public String getAdminPassword(Long adminId) {
+        Admin admin = adminDao.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+        return admin.getPassword();
+    }
+
+    public void updateAdminPassword(Long adminId, String newPassword) {
+        Admin admin = adminDao.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+        admin.setPassword(newPassword);
+        adminDao.save(admin);
     }
 }

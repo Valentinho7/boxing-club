@@ -3,6 +3,7 @@ package fr.eql.ai115.boxing.club.controller.rest;
 import fr.eql.ai115.boxing.club.entity.dto.AddMemberDto;
 import fr.eql.ai115.boxing.club.entity.dto.AuthResponseDto;
 import fr.eql.ai115.boxing.club.entity.dto.LoginRequest;
+import fr.eql.ai115.boxing.club.entity.dto.PasswordChangeRequestDto;
 import fr.eql.ai115.boxing.club.jwt.JWTGenerator;
 import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,55 @@ public class MemberRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateMember(@RequestBody AddMemberDto addMemberDto, @PathVariable Long id) {
-        applicationService.updateMember(addMemberDto, id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("update")
+    public ResponseEntity<String> updateMember(@RequestBody AddMemberDto addMemberDto, @RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Long memberId = jwtGenerator.getUserIdFromToken(token);
+
+            applicationService.updateMember(addMemberDto, memberId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("validatePayment")
+    public ResponseEntity<String> validatePayment(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Long memberId = jwtGenerator.getUserIdFromToken(token);
+
+            applicationService.validateMemberPayment(memberId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("validateSubscription")
+    public ResponseEntity<String> validateSubscription(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Long memberId = jwtGenerator.getUserIdFromToken(token);
+
+            applicationService.validateMemberSubscription(memberId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequest, @RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Long memberId = jwtGenerator.getUserIdFromToken(token);
+
+            try {
+                applicationService.changeMemberPassword(memberId, passwordChangeRequest);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
     }
 }

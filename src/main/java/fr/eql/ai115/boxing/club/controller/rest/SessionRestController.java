@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/admin/sessions")
+@RequestMapping("api/sessions")
 public class SessionRestController {
 
     @Autowired

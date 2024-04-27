@@ -30,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     AdminDao adminDao;
 
-
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

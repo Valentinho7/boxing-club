@@ -48,8 +48,43 @@ public class MemberService implements UserDetailsService{
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
-
     public Optional<Member> findByEmail(String username) {
         return memberDao.findByEmail(username);
+    }
+
+    public void validatePayment(Long id) {
+        Member member = findMemberById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        member.setPayementValidated(true);
+
+        save(member);
+    }
+
+    public void validateSubscription(Long id) {
+        Member member = findMemberById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        member.setSubscriptionValidated(true);
+
+        save(member);
+    }
+
+    public Member getMemberById(Long id) {
+        return memberDao.findMemberById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+    }
+
+    public String getMemberPassword(Long memberId) {
+        Member member = memberDao.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        return member.getPassword();
+    }
+
+    public void updateMemberPassword(Long memberId, String newPassword) {
+        Member member = memberDao.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        member.setPassword(newPassword);
+        memberDao.save(member);
     }
 }
