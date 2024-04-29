@@ -48,7 +48,7 @@ public class SpringSecurityConfig {
                 .exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers("/api/member/register","/api/admin/register","/api/member/login", "/api/admin/login").permitAll();
+                    authorize.requestMatchers("/api/member/register","/api/admin/register","/api/login").permitAll();
                     authorize.requestMatchers("api/admin/**","api/sessions/types","api/sessions").hasAuthority("Admin");
                     authorize.requestMatchers("/api/member/**","/api/reservations").hasAnyAuthority("Admin","Member");
                     authorize.anyRequest().authenticated();

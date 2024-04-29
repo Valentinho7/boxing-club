@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -176,6 +177,31 @@ public class ApplicationService {
         sessionService.saveSession(sessionToUpdate);
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public List<SessionDto> findSessionsByReservationId(Long reservationId) {
+        Reservation reservation = reservationService.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        List<Session> sessions = reservation.getSessions();
+        return sessions.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    private SessionDto mapToDto(Session session) {
+        SessionDto dto = new SessionDto();
+        dto.setId(session.getId());
+        dto.setName(session.getName());
+        dto.setDurationInHours(session.getDurationInHours());
+        dto.setSessionType(session.getSessionType());
+        dto.setDate(session.getDate());
+        dto.setHour(session.getHour());
+        dto.setCoachName(session.getCoachName());
+        dto.setMaxPeople(session.getMaxPeople());
+        dto.setDescription(session.getDescription());
+        return dto;
+    }
+
     ///////////////////////////
     /// SessionType methods ///
     ///////////////////////////
@@ -256,6 +282,8 @@ public class ApplicationService {
         return sessionTypeService.findAllSessionTypes();
     }
 
+
+
     ////////////////////////////
     /// Reservation methods ///
     //////////////////////////
@@ -273,6 +301,40 @@ public class ApplicationService {
         reservation.setSessions(sessions);
 
         reservationService.saveReservation(reservation);
+    }
+
+    public List<ReservationDto> findAllReservationsByMembers(Long memberId) {
+        List<Reservation> reservations = memberService.getMemberReservations(memberId);
+        return reservations.stream()
+                .map(reservation -> {
+                    ReservationDto dto = new ReservationDto();
+                    dto.setId(reservation.getId());
+                    dto.setOrderedDate(reservation.getOrderedDate());
+                    dto.setValidateDate(reservation.getValidateDate());
+                    dto.setValidate(reservation.isValidate());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<ReservationDto> findAllValidateReservations() {
+        List<Reservation> reservations = reservationService.findAllValidateReservations();
+        return reservations.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    private ReservationDto mapToDto(Reservation reservation) {
+        ReservationDto dto = new ReservationDto();
+        dto.setId(reservation.getId());
+        dto.setOrderedDate(reservation.getOrderedDate());
+        dto.setValidateDate(reservation.getValidateDate());
+        dto.setValidate(reservation.isValidate());
+        return dto;
+    }
+
+    public void validateReservation(Long reservationId) {
+        reservationService.validateReservation(reservationId);
     }
 
     /////////////////////

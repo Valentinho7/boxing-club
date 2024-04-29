@@ -32,12 +32,6 @@ public class AdminRestController {
         }
     }
 
-    @PostMapping("login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequest loginRequest) {
-        AuthResponseDto response = applicationService.login(loginRequest, authenticationManager);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @PutMapping("updateAdmin")
     public ResponseEntity<String> updateAdmin(@RequestBody UpdateAdminDto updateAdminDto, @RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

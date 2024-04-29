@@ -1,6 +1,7 @@
 package fr.eql.ai115.boxing.club.service.impl;
 
 import fr.eql.ai115.boxing.club.entity.Member;
+import fr.eql.ai115.boxing.club.entity.Reservation;
 import fr.eql.ai115.boxing.club.entity.Role;
 import fr.eql.ai115.boxing.club.repository.MemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class MemberService implements UserDetailsService{
 
     @Autowired
     MemberDao memberDao;
+
+    @Autowired
+    ReservationService reservationService;
 
     public boolean existsByEmail(String email) {
         return memberDao.existsByEmail(email);
@@ -86,5 +90,9 @@ public class MemberService implements UserDetailsService{
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
         member.setPassword(newPassword);
         memberDao.save(member);
+    }
+
+    public List<Reservation> getMemberReservations(Long memberId) {
+        return reservationService.findAllByMemberId(memberId);
     }
 }

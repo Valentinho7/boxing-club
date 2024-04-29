@@ -18,7 +18,7 @@ public class Session {
 
     private int durationInHours;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id")
     private SessionType sessionType;
 

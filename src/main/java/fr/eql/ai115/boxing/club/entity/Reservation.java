@@ -22,7 +22,7 @@ public class Reservation {
     @Column(name = "is_validate", nullable = false, columnDefinition = "boolean default false")
     private boolean isValidate;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     private List<Session> sessions;
 
     @ManyToOne
@@ -65,5 +65,8 @@ public class Reservation {
     }
     public void setMember(Member member) {
         this.member = member;
+    }
+    public void setValidate(boolean validate) {
+        isValidate = validate;
     }
 }
