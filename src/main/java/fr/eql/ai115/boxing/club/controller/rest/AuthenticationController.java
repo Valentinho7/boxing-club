@@ -20,7 +20,7 @@ public class AuthenticationController {
     @Autowired
     ApplicationService applicationService;
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequest loginRequest) {
         AuthResponseDto response = applicationService.login(loginRequest, authenticationManager);
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -359,6 +359,34 @@ public class ApplicationService {
             throw new IllegalArgumentException("Error: Email is already taken!");
         }
 
+        if (addMemberDto.getFirstname() == null || addMemberDto.getFirstname().isEmpty()) {
+            throw new IllegalArgumentException("Error: Firstname cannot be empty!");
+        }
+
+        if (addMemberDto.getLastname() == null || addMemberDto.getLastname().isEmpty()) {
+            throw new IllegalArgumentException("Error: Lastname cannot be empty!");
+        }
+
+        if (addMemberDto.getBirthdate() == null) {
+            throw new IllegalArgumentException("Error: Birthdate cannot be empty!");
+        }
+
+        if (addMemberDto.getEmail() == null || addMemberDto.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Error: Email cannot be empty!");
+        }
+
+        if (addMemberDto.getPhoneNumber() == null || addMemberDto.getPhoneNumber().isEmpty()) {
+            throw new IllegalArgumentException("Error: Phone number cannot be empty!");
+        }
+
+        if (addMemberDto.getAddress() == null || addMemberDto.getAddress().isEmpty()) {
+            throw new IllegalArgumentException("Error: Address cannot be empty!");
+        }
+
+        if (addMemberDto.getPassword() == null || addMemberDto.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Error: Password cannot be empty!");
+        }
+
         Member member = new Member();
         member.setFirstname(addMemberDto.getFirstname());
         member.setLastname(addMemberDto.getLastname());
@@ -375,7 +403,6 @@ public class ApplicationService {
         memberService.save(member);
 
         return "User registered successfully!";
-
     }
 
 
@@ -452,27 +479,14 @@ public class ApplicationService {
         memberService.updateMemberPassword(memberId, passwordEncoder.encode(newPassword));
     }
 
-    /**
-     * Validates the payment of a member.
-     *
-     * @param memberId The ID of the member whose payment is to be validated.
-     */
-    public void validateMemberPayment(Long memberId) {
-        memberService.validatePayment(memberId);
-    }
-
-    /**
-     * Validates the subscription of a member.
-     *
-     * This method retrieves the member by their ID, checks if their payment has been validated,
-     * and if so, validates their subscription. If the member's payment has not been validated,
-     * an IllegalArgumentException is thrown.</p>
-     *
-     * @param memberId The ID of the member whose subscription is to be validated.
-     * @throws IllegalArgumentException if no member is found with the provided ID, or if the member's payment has not been validated.
-     */
-    public void validateMemberSubscription(Long memberId) {
+    public void validatePaymentAndSubscription(Long memberId) {
         Member member = memberService.findMemberById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        memberService.validatePayment(memberId);
+
+        // Retrieve the member object again after validating the payment
+        member = memberService.findMemberById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         if (!member.isPayementValidated()) {
@@ -481,6 +495,7 @@ public class ApplicationService {
 
         memberService.validateSubscription(memberId);
     }
+
 
     //////////////////////
     /// Admin methods ///

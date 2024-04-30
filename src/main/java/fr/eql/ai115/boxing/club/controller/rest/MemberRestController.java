@@ -32,7 +32,7 @@ public class MemberRestController {
 
 
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AddMemberDto addMemberDto) {
         try {
             String response = applicationService.registerUser(addMemberDto);
@@ -42,7 +42,7 @@ public class MemberRestController {
         }
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<String> updateMember(@RequestBody AddMemberDto addMemberDto, @RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -54,31 +54,19 @@ public class MemberRestController {
         return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("validatePayment")
-    public ResponseEntity<String> validatePayment(@RequestHeader("Authorization") String authHeader) {
+    @PutMapping("/validatePaymentAndSubscription")
+    public ResponseEntity<String> validatePaymentAndSubscription(@RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             Long memberId = jwtGenerator.getUserIdFromToken(token);
 
-            applicationService.validateMemberPayment(memberId);
+            applicationService.validatePaymentAndSubscription(memberId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("validateSubscription")
-    public ResponseEntity<String> validateSubscription(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            Long memberId = jwtGenerator.getUserIdFromToken(token);
-
-            applicationService.validateMemberSubscription(memberId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
-    }
-
-    @PostMapping("changePassword")
+    @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequest, @RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);

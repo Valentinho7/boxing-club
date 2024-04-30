@@ -23,7 +23,7 @@ public class AdminRestController {
     @Autowired
     JWTGenerator jwtGenerator;
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<String> registerAdmin(@RequestBody AddMemberDto addMemberDto) {
         try {
             String response = applicationService.registerAdmin(addMemberDto);
@@ -33,7 +33,7 @@ public class AdminRestController {
         }
     }
 
-    @PutMapping("updateAdmin")
+    @PutMapping("/updateAdmin")
     public ResponseEntity<String> updateAdmin(@RequestBody UpdateAdminDto updateAdminDto, @RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -49,7 +49,7 @@ public class AdminRestController {
         return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("changePassword")
+    @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequest, @RequestHeader("Authorization") String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
