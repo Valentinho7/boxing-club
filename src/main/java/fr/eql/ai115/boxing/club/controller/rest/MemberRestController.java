@@ -13,7 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin("${front.url}")
 @RestController
 @RequestMapping("/api/member")
 public class MemberRestController {

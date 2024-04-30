@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("${front.url}")
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationRestController {

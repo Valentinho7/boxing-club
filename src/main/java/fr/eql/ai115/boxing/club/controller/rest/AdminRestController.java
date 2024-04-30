@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("${front.url}")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminRestController {
