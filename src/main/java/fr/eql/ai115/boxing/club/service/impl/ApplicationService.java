@@ -441,9 +441,6 @@ public class ApplicationService {
         if (updateMemberDto.getAddress() != null) {
             memberToUpdate.setAddress(updateMemberDto.getAddress());
         }
-        if (updateMemberDto.getPassword() != null) {
-            memberToUpdate.setPassword(passwordEncoder.encode(updateMemberDto.getPassword()));
-        }
 
         memberService.save(memberToUpdate);
     }
@@ -494,6 +491,22 @@ public class ApplicationService {
         }
 
         memberService.validateSubscription(memberId);
+    }
+
+    public ShowMemberDto getMemberDetails(Long id) {
+        Member member = memberService.getMemberById(id);
+        return convertToDto(member);
+    }
+
+    private ShowMemberDto convertToDto(Member member) {
+        ShowMemberDto dto = new ShowMemberDto();
+        dto.setEmail(member.getEmail());
+        dto.setAddress(member.getAddress());
+        dto.setBirthdate(member.getBirthdate());
+        dto.setFirstname(member.getFirstname());
+        dto.setLastname(member.getLastname());
+        dto.setPhoneNumber(member.getPhoneNumber());
+        return dto;
     }
 
 

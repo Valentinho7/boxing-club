@@ -1,9 +1,7 @@
 package fr.eql.ai115.boxing.club.controller.rest;
 
-import fr.eql.ai115.boxing.club.entity.dto.AddMemberDto;
-import fr.eql.ai115.boxing.club.entity.dto.AuthResponseDto;
-import fr.eql.ai115.boxing.club.entity.dto.LoginRequest;
-import fr.eql.ai115.boxing.club.entity.dto.PasswordChangeRequestDto;
+import fr.eql.ai115.boxing.club.entity.Member;
+import fr.eql.ai115.boxing.club.entity.dto.*;
 import fr.eql.ai115.boxing.club.jwt.JWTGenerator;
 import fr.eql.ai115.boxing.club.service.impl.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +78,17 @@ public class MemberRestController {
             }
         }
         return new ResponseEntity<>("Authorization header not found or does not start with Bearer", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/memberDetails")
+    public ResponseEntity<ShowMemberDto> getMemberDetails(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Long memberId = jwtGenerator.getUserIdFromToken(token);
+
+            ShowMemberDto member = applicationService.getMemberDetails(memberId);
+            return new ResponseEntity<>(member, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
