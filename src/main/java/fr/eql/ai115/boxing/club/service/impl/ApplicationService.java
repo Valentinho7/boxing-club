@@ -63,8 +63,10 @@ public class ApplicationService {
      * Saves a new session.
      *
      * This method takes an AddSessionDto object as a parameter, which contains the details of the session to be saved.
-     * It retrieves the current authenticated admin from the SecurityContext, and finds the corresponding admin in the database.
-     * It then creates a new Session object with the details from the AddSessionDto, and sets the admin of the session to the authenticated admin.
+     * It retrieves the current authenticated admin from the SecurityContext, and finds the corresponding admin in the
+     * database.
+     * It then creates a new Session object with the details from the AddSessionDto, and sets the admin of the session
+     * to the authenticated admin.
      * Finally, it saves the new session in the database.
      *
      * @param addSessionDto The session data transfer object containing the session details.
@@ -337,16 +339,17 @@ public class ApplicationService {
         reservationService.validateReservation(reservationId);
     }
 
+    ///////////////////////
+    /// Member methods ///
     /////////////////////
-    /// User methods ///
-    ///////////////////
 
     /**
      * Registers a new user.
      *
      * This method takes an AddMemberDto object as a parameter, which contains the details of the user to be registered.
      * It checks if a user already exists with the provided email. If so, it throws an IllegalArgumentException.
-     * Otherwise, it creates a new Member object with the details from the AddMemberDto, sets the role of the member to "MEMBER", and saves the new member in the database.
+     * Otherwise, it creates a new Member object with the details from the AddMemberDto, sets the role of the member
+     * to "MEMBER", and saves the new member in the database.
      * Finally, it returns a success message.
      *
      * @param addMemberDto The authentication request containing the user details.
@@ -413,7 +416,8 @@ public class ApplicationService {
      * The AddMemberDto object contains the updated details of the member.
      * The method first finds the member by their ID.
      * If the member is not found, it throws an IllegalArgumentException.
-     * If the member is found, it updates the member's details with the details from the AddMemberDto, and saves the updated member in the database.
+     * If the member is found, it updates the member's details with the details from the AddMemberDto, and saves the
+     * mupdated member in the database.
      *
      * @param updateMemberDto The data transfer object containing the updated member details.
      * @param id The ID of the member to update.
